@@ -18,6 +18,14 @@ class UserSeeder extends Seeder
         $user->name = 'admin';
         $user->email = 'admin@gmail.com';
         $user->password = Hash::make('admin');
+        $user->rol = 'administrador';
+        $user->save();
+
+        $user = new User();
+        $user->name = 'veterinario';
+        $user->email = 'veterinario@gmail.com';
+        $user->password = Hash::make('veterinario');
+        $user->rol = 'veterinario';
         $user->save();
     }
 }
