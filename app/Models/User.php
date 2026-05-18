@@ -23,7 +23,13 @@ class User extends Authenticatable
         'email',
         'password',
         'rol',
+        'activo',
     ];
+
+    public function veterinario()
+    {
+        return $this->hasOne(Veterinario::class, 'usuario_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -27,9 +27,16 @@
         Gestión
     </div>
 
+    <!-- Nav Item - Menú -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.menu.index') }}">
+            <i class="fas fa-fw fa-th-list"></i>
+            <span>Menú de Opciones</span></a>
+    </li>
+
     <!-- Nav Item - Usuarios -->
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('admin.usuarios.index') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Usuarios</span></a>
     </li>
