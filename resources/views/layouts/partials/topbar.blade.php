@@ -2,50 +2,37 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
     <!-- Sidebar Toggle (Topbar) -->
-    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+    <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
 
-    <!-- Topbar Search -->
-    <form
-        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+    <!-- Topbar Brand -->
+    <a class="navbar-brand text-gray-800 font-weight-bold ml-md-3 my-2 my-md-0 mr-auto text-decoration-none h5 mb-0" href="{{ route('home') }}">
+        <i class="fas fa-paw text-primary mr-1"></i> Sistema Veterinario
+    </a>
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
-        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
+        <!-- Nav Item - Inicio -->
+        <li class="nav-item mr-3 my-auto">
+            <a class="nav-link {{ request()->routeIs('home') ? 'text-primary font-weight-bold' : 'text-gray-600' }}" href="{{ route('home') }}">
+                <i class="fas fa-home mr-1 {{ request()->routeIs('home') ? 'text-primary' : 'text-gray-400' }}"></i>
+                <span>Inicio</span>
             </a>
-            <!-- Dropdown - Messages -->
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                aria-labelledby="searchDropdown">
-                <form class="form-inline mr-auto w-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small"
-                            placeholder="Search for..." aria-label="Search"
-                            aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
         </li>
+
+        <!-- Nav Item - Expedientes -->
+        <li class="nav-item mr-3 my-auto">
+            <a class="nav-link {{ request()->routeIs('expedientes') ? 'text-primary font-weight-bold' : 'text-gray-600' }}" href="{{ route('expedientes') }}">
+                <i class="fas fa-folder-open mr-1 {{ request()->routeIs('expedientes') ? 'text-primary' : 'text-gray-400' }}"></i>
+                <span>Expedientes</span>
+            </a>
+        </li>
+
+        <div class="topbar-divider d-none d-sm-block"></div>
+
+
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">

@@ -20,9 +20,19 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <style>
+        @media (min-width: 768px) {
+            .sidebar.toggled {
+                width: 0 !important;
+                overflow: hidden;
+                display: none !important;
+            }
+        }
+    </style>
+
 </head>
 
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
     <!-- Page Wrapper -->
     <div id="wrapper">

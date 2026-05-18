@@ -42,6 +42,10 @@ class AuthController extends Controller
         return view('modules/dashboard/home');
     }
 
+    public function expedientes() {
+        return view('modules/dashboard/expedientes');
+    }
+
     public function adminHome() {
         return view('modules/admin/dashboard');
     }
