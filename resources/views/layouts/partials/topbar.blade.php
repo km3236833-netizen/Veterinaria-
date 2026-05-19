@@ -14,13 +14,7 @@
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
-        <!-- Nav Item - Inicio -->
-        <li class="nav-item mr-3 my-auto">
-            <a class="nav-link {{ request()->routeIs('home') ? 'text-primary font-weight-bold' : 'text-gray-600' }}" href="{{ route('home') }}">
-                <i class="fas fa-home mr-1 {{ request()->routeIs('home') ? 'text-primary' : 'text-gray-400' }}"></i>
-                <span>Inicio</span>
-            </a>
-        </li>
+
 
         <!-- Nav Item - Expedientes -->
         <li class="nav-item mr-3 my-auto">

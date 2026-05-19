@@ -13,7 +13,6 @@ class Dueno extends Model
         'nombre_completo',
         'telefono',
         'direccion',
-        'redes_sociales',
     ];
 
     public function mascotas()

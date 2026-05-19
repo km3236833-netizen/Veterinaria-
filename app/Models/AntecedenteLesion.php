@@ -9,6 +9,8 @@ class AntecedenteLesion extends Model
 {
     use HasFactory;
 
+    protected $table = 'antecedentes_lesiones';
+
     protected $fillable = [
         'mascota_id',
         'tipo_lesion',

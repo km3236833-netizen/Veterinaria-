@@ -9,6 +9,8 @@ class AntecedenteAlergia extends Model
 {
     use HasFactory;
 
+    protected $table = 'antecedentes_alergias';
+
     protected $fillable = [
         'mascota_id',
         'sustancia_alergena',

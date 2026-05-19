@@ -43,7 +43,8 @@ class AuthController extends Controller
     }
 
     public function expedientes() {
-        return view('modules/dashboard/expedientes');
+        $mascotas = \App\Models\Mascota::with('dueno')->get();
+        return view('modules/dashboard/expedientes', compact('mascotas'));
     }
 
     public function adminHome() {
