@@ -3,6 +3,23 @@
 @section('titulo_pagina', 'Expedientes Médicos')
 
 @section('contenido')
+    <style>
+        .paciente-row {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .paciente-row:hover {
+            background-color: rgba(78, 115, 223, 0.05) !important;
+        }
+        .paciente-row.selected,
+        .paciente-row.selected td {
+            background-color: rgba(78, 115, 223, 0.12) !important;
+        }
+        .paciente-row.selected td .text-dark,
+        .paciente-row.selected td .text-primary {
+            color: #4e73df !important;
+        }
+    </style>
     <div class="container-fluid mt-4">
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -10,6 +27,12 @@
                 <i class="fas fa-folder-open text-primary mr-2"></i>Expedientes Médicos
             </h1>
             <div class="d-flex">
+                <a id="btn-ver-consultas" href="#" class="btn btn-info btn-icon-split shadow mr-2 disabled" style="pointer-events: none; opacity: 0.6; transition: all 0.3s ease;">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-stethoscope"></i>
+                    </span>
+                    <span class="text font-weight-bold">Ver Consultas</span>
+                </a>
                 <a href="{{ route('mascotas.create') }}" class="btn btn-primary btn-icon-split shadow mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-plus"></i>
@@ -112,14 +135,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Listado de Pacientes</h6>
-                <div class="input-group col-md-4 px-0">
-                    <input type="text" id="buscador-pacientes" class="form-control form-control-sm bg-light border-0 small" placeholder="Buscar expediente por paciente, especie, raza o dueño..." aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary btn-sm" type="button">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                    </div>
-                </div>
+                <input type="text" id="buscador-pacientes" class="form-control form-control-sm bg-light border-0 small col-md-4 px-3" style="border-radius: 10px;" placeholder="Buscar expediente por paciente, especie, raza o dueño..." aria-label="Search">
             </div>
             <div class="card-body px-0 py-2">
                 <div class="table-responsive">
@@ -137,8 +153,8 @@
                         </thead>
                         <tbody>
                             @forelse($mascotas as $mascota)
-                                <tr class="paciente-row">
-                                    <td class="pl-4 font-weight-bold text-primary">#EXP-{{ str_pad($mascota->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <tr class="paciente-row" data-id="{{ $mascota->id }}" data-url="{{ route('mascotas.show', $mascota->id) }}">
+                                    <td class="pl-4 font-weight-bold text-primary id-search" data-id="{{ $mascota->id }}">#EXP-{{ str_pad($mascota->id, 3, '0', STR_PAD_LEFT) }}</td>
                                     <td>
                                         <span class="font-weight-bold text-dark name-search">{{ $mascota->nombre }}</span>
                                         <small class="d-block text-muted breed-search">{{ $mascota->raza }}, {{ \Carbon\Carbon::parse($mascota->fecha_nacimiento)->age }} años</small>
@@ -185,7 +201,25 @@
             const buscador = document.getElementById('buscador-pacientes');
             const rows = document.querySelectorAll('.paciente-row');
             const noResultsRow = document.getElementById('no-results-row');
+            const btnVerConsultas = document.getElementById('btn-ver-consultas');
 
+            function updateBtnState() {
+                const selectedRow = document.querySelector('.paciente-row.selected');
+                if (selectedRow && selectedRow.style.display !== 'none') {
+                    const url = selectedRow.getAttribute('data-url');
+                    btnVerConsultas.classList.remove('disabled');
+                    btnVerConsultas.style.pointerEvents = 'auto';
+                    btnVerConsultas.style.opacity = '1';
+                    btnVerConsultas.setAttribute('href', url);
+                } else {
+                    btnVerConsultas.classList.add('disabled');
+                    btnVerConsultas.style.pointerEvents = 'none';
+                    btnVerConsultas.style.opacity = '0.6';
+                    btnVerConsultas.setAttribute('href', '#');
+                }
+            }
+
+            // Search filtering logic
             if (buscador) {
                 buscador.addEventListener('input', function () {
                     const query = buscador.value.toLowerCase().trim();
@@ -196,17 +230,29 @@
                         const raza = row.querySelector('.breed-search').textContent.toLowerCase();
                         const especie = row.querySelector('.species-search').textContent.toLowerCase();
                         const dueno = row.querySelector('.owner-search').textContent.toLowerCase();
+                        
+                        const idSearch = row.querySelector('.id-search');
+                        const idText = idSearch ? idSearch.textContent.toLowerCase() : '';
+                        const idRaw = idSearch ? idSearch.getAttribute('data-id').toLowerCase() : '';
 
                         if (nombre.includes(query) || 
                             raza.includes(query) || 
                             especie.includes(query) || 
-                            dueno.includes(query)) {
+                            dueno.includes(query) ||
+                            idText.includes(query) ||
+                            idRaw.includes(query)) {
                             row.style.display = '';
                             visibleCount++;
                         } else {
                             row.style.display = 'none';
+                            // If selected row gets hidden, deselect it
+                            if (row.classList.contains('selected')) {
+                                row.classList.remove('selected');
+                            }
                         }
                     });
+
+                    updateBtnState();
 
                     if (visibleCount === 0 && rows.length > 0) {
                         noResultsRow.style.display = '';
@@ -215,6 +261,38 @@
                     }
                 });
             }
+
+            // Selection logic when clicking a row
+            rows.forEach(row => {
+                row.addEventListener('click', function (e) {
+                    // Do not trigger selection if clicking an action button/link
+                    if (e.target.closest('a') || e.target.closest('button')) {
+                        return;
+                    }
+
+                    const isAlreadySelected = this.classList.contains('selected');
+
+                    // Deselect all other rows
+                    rows.forEach(r => r.classList.remove('selected'));
+
+                    if (!isAlreadySelected) {
+                        this.classList.add('selected');
+                    }
+
+                    updateBtnState();
+                });
+
+                // Double click behavior to directly visit consultations
+                row.addEventListener('dblclick', function (e) {
+                    if (e.target.closest('a') || e.target.closest('button')) {
+                        return;
+                    }
+                    const url = this.getAttribute('data-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                });
+            });
         });
     </script>
 @endsection
