@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DuenoController;
 use App\Http\Controllers\MascotaController;
+use App\Http\Controllers\ConsultaController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/login', '/');
@@ -21,7 +22,10 @@ Route::middleware("auth")->group(function () {
     // Rutas para Dueños y Mascotas
     Route::resource('/duenos', DuenoController::class)->names('duenos');
     Route::resource('/mascotas', MascotaController::class)->names('mascotas');
-    
+
+    // Ruta para detalle de consulta: /consultas/{consulta}/detalle?mascota={id}
+    Route::get('/consultas/{consulta}/detalle', [ConsultaController::class, 'detalle'])->name('consultas.detalle');
+
     Route::get('/admin/home', [AuthController::class, 'adminHome'])->name('admin.home');
     Route::get('/admin/menu', [MenuController::class, 'index'])->name('admin.menu.index');
     Route::resource('/admin/usuarios', UserController::class)->names('admin.usuarios');

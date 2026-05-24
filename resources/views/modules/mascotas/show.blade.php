@@ -150,18 +150,24 @@
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th>Motivo</th>
                                                 <th>Diagnóstico</th>
                                                 <th>Tratamiento</th>
+                                                <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($item->consultas as $consulta)
                                                 <tr>
-                                                    <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
-                                                    <td><strong>{{ $consulta->motivo }}</strong></td>
+                                                    <td>{{ \Carbon\Carbon::parse($consulta->fecha_consulta)->format('d/m/Y') }}</td>
                                                     <td>{{ $consulta->diagnostico }}</td>
                                                     <td><span class="text-success font-weight-bold">{{ $consulta->tratamiento }}</span></td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('consultas.detalle', ['consulta' => $consulta->id, 'mascota' => $item->id]) }}"
+                                                           class="btn btn-sm btn-primary shadow-sm"
+                                                           title="Ver detalles de consulta">
+                                                            <i class="fas fa-eye mr-1"></i> Ver
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>

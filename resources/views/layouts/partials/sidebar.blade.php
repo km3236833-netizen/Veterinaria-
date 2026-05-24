@@ -3,8 +3,8 @@
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-paw"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Veterinaria</div>
     </a>
@@ -13,40 +13,63 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span>Dashboard</span>
+        </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
     <!-- Heading -->
-    <div class="sidebar-heading">
-        Interface
-    </div>
+    <div class="sidebar-heading">Gestión Médica</div>
 
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Components</span>
+    <!-- Nav Item - Expedientes -->
+    <li class="nav-item {{ request()->routeIs('expedientes') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('expedientes') }}">
+            <i class="fas fa-fw fa-folder-open"></i>
+            <span>Expedientes</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="#">Buttons</a>
-                <a class="collapse-item" href="#">Cards</a>
-            </div>
-        </div>
     </li>
+
+    <!-- Nav Item - Mascotas (Pacientes) -->
+    <li class="nav-item {{ request()->routeIs('mascotas.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('mascotas.index') }}">
+            <i class="fas fa-fw fa-dog"></i>
+            <span>Pacientes</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Dueños -->
+    <li class="nav-item {{ request()->routeIs('duenos.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('duenos.index') }}">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Propietarios</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">Administración</div>
+
+    <!-- Nav Item - Usuarios (solo admin) -->
+    @if(auth()->user()->rol === 'administrador')
+    <li class="nav-item {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.usuarios.index') }}">
+            <i class="fas fa-fw fa-user-cog"></i>
+            <span>Usuarios</span>
+        </a>
+    </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <!-- Sidebar Toggler (Sidebar) -->
+    <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>

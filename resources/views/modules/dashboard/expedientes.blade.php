@@ -172,8 +172,9 @@
                                         @endif
                                     </td>
                                     <td class="text-center pr-4">
-                                        <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-sm btn-info btn-circle"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('mascotas.edit', $mascota->id) }}" class="btn btn-sm btn-warning btn-circle"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-sm btn-primary shadow-sm px-3" title="Ver expediente del paciente">
+                                            <i class="fas fa-eye mr-1"></i> Ver
+                                        </a>
                                     </td>
                                 </tr>
                             @empty
