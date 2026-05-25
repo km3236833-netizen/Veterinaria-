@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DuenoController;
 use App\Http\Controllers\MascotaController;
 use App\Http\Controllers\ConsultaController;
+use App\Http\Controllers\TratamientoController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/login', '/');
@@ -39,6 +40,10 @@ Route::middleware("auth")->group(function () {
 
     // Ruta para detalle de consulta: /consultas/{consulta}/detalle?mascota={id}
     Route::get('/consultas/{consulta}/detalle', [ConsultaController::class, 'detalle'])->name('consultas.detalle');
+
+    // Rutas para Tratamientos (Independientes)
+    Route::get('/tratamientos/{tratamiento}/pdf', [TratamientoController::class, 'pdf'])->name('tratamientos.pdf');
+    Route::resource('/tratamientos', TratamientoController::class)->names('tratamientos');
 
     Route::get('/admin/home', [AuthController::class, 'adminHome'])->name('admin.home');
     Route::get('/admin/menu', [MenuController::class, 'index'])->name('admin.menu.index');

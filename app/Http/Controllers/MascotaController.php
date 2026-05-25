@@ -78,7 +78,7 @@ class MascotaController extends Controller
      */
     public function show($id)
     {
-        $item = Mascota::with(['dueno', 'consultas', 'antecedentesAlergias', 'antecedentesLesiones', 'antecedentesPatologicos', 'historialAlimentacion'])
+        $item = Mascota::with(['dueno', 'consultas', 'antecedentesAlergias', 'antecedentesLesiones', 'antecedentesPatologicos', 'historialAlimentacion', 'tratamientos'])
             ->findOrFail($id);
             
         return view('modules.mascotas.show', compact('item'));

@@ -58,6 +58,14 @@
         </a>
     </li>
 
+    <!-- Nav Item - Tratamientos -->
+    <li class="nav-item {{ request()->routeIs('tratamientos.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('tratamientos.index') }}">
+            <i class="fas fa-fw fa-capsules"></i>
+            <span>Tratamientos</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 

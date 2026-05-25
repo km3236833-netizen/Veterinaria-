@@ -158,6 +158,11 @@
                                     <i class="fas fa-utensils mr-1"></i> Dieta
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold py-3" id="tratamientos-tab" data-toggle="tab" href="#tratamientos" role="tab" aria-controls="tratamientos" aria-selected="false" style="color: #6f42c1;">
+                                    <i class="fas fa-capsules mr-1"></i> Tratamientos
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body">
@@ -391,6 +396,71 @@
                                                     <td colspan="4" class="text-center text-muted py-4">
                                                         <i class="fas fa-utensils fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay dietas o restricciones alimenticias registradas.</p>
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Tratamientos -->
+                            <div class="tab-pane fade" id="tratamientos" role="tabpanel" aria-labelledby="tratamientos-tab">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="font-weight-bold mb-0" style="color: #6f42c1;">Historial de Tratamientos Médicos</h5>
+                                    <a href="{{ route('tratamientos.create', ['mascota' => $item->id]) }}" class="btn btn-sm shadow-sm text-white" style="background-color: #6f42c1;">
+                                        <i class="fas fa-plus mr-1"></i> Registrar Tratamiento
+                                    </a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>Medicamento</th>
+                                                <th>Dosis / Frecuencia</th>
+                                                <th>Vigencia</th>
+                                                <th class="text-center" style="width: 150px;">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($item->tratamientos as $tratamiento)
+                                                <tr>
+                                                    <td class="font-weight-bold text-dark">
+                                                        <i class="fas fa-prescription-bottle-alt text-muted mr-1"></i> {{ $tratamiento->medicamento }}
+                                                    </td>
+                                                    <td>
+                                                        <span class="font-weight-bold text-secondary">{{ $tratamiento->dosis }}</span>
+                                                        <small class="d-block text-muted">{{ $tratamiento->frecuencia }}</small>
+                                                    </td>
+                                                    <td class="text-nowrap">
+                                                        <small class="d-block font-weight-bold text-primary"><i class="far fa-calendar-alt mr-1"></i> {{ \Carbon\Carbon::parse($tratamiento->fecha_inicio)->format('d/m/Y') }}</small>
+                                                        <small class="d-block font-weight-bold text-danger"><i class="far fa-calendar-check mr-1"></i> {{ \Carbon\Carbon::parse($tratamiento->fecha_fin)->format('d/m/Y') }}</small>
+                                                    </td>
+                                                    <td class="text-center text-nowrap">
+                                                        <a href="{{ route('tratamientos.show', $tratamiento->id) }}" class="btn btn-sm btn-info px-2 shadow-sm" title="Ver Detalle">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ route('tratamientos.pdf', $tratamiento->id) }}" target="_blank" class="btn btn-sm btn-danger px-2 shadow-sm ml-1" title="Imprimir PDF">
+                                                            <i class="fas fa-file-pdf"></i>
+                                                        </a>
+                                                        <a href="{{ route('tratamientos.edit', $tratamiento->id) }}" class="btn btn-sm btn-warning text-dark px-2 shadow-sm ml-1" title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form action="{{ route('tratamientos.destroy', $tratamiento->id) }}" method="POST" class="d-inline ml-1"
+                                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el tratamiento médico:\n\n• Paciente: {{ addslashes($item->nombre) }}\n• Medicamento: {{ addslashes($tratamiento->medicamento) }}\n• Frecuencia: {{ addslashes($tratamiento->frecuencia) }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger px-2 shadow-sm" title="Eliminar">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted py-4">
+                                                        <i class="fas fa-capsules fa-2x mb-2 text-gray-300"></i>
+                                                        <p class="mb-0">No hay tratamientos médicos prescritos para este paciente.</p>
                                                     </td>
                                                 </tr>
                                             @endforelse

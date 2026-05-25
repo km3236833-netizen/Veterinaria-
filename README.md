@@ -60,6 +60,14 @@ Este es un sistema de gestión para una veterinaria desarrollado con Laravel 12,
 * **Confirmación Visual de Eliminación Detallada (Anti-Errores):** Se implementaron cuadros de diálogo interactivos avanzados en el cliente (`onsubmit`) para evitar pérdidas accidentales. Antes de borrar una consulta, mascota o antecedente, el sistema muestra una ventana emergente detallando explícitamente el nombre, fecha y contenido específico del registro clínico que está a punto de ser eliminado.
 * **Mensajería Reaseguradora:** Inserción de un sistema de alertas flash altamente estético y en armonía con Bootstrap 4, indicando el éxito de la operación mediante mensajes unificados: `"Se guardó la nueva información."` o `"Se eliminó la información con éxito."`.
 
+### 7. Módulo de Gestión Independiente de Tratamientos Médicos y Recetario PDF
+* **Arquitectura Clínica Desacoplada:** Se migró el seguimiento terapéutico a una nueva entidad de base de datos (`tratamientos`) con relación uno a muchos (`hasMany`) en el modelo `Mascota` para registrar de forma aislada y detallada los medicamentos de cada paciente.
+* **Controlador RESTful Completo:** Implementación del CRUD completo (`TratamientoController`) para listar, crear, ver, editar y eliminar prescripciones de forma segura, incluyendo validaciones clínicas de fechas (fecha de término posterior a inicio).
+* **Editor Clínico Enriquecido:** Integración de **CKEditor 5** en los formularios de registro y edición de tratamientos para permitir descripciones detalladas de posologías, advertencias y pautas alimenticias con formatos profesionales.
+* **Generador de Recetas PDF (Print-Ready):** Diseño de una plantilla médica de receta estéril y elegante (`pdf.blade.php`) equipada con estilos CSS específicos para impresión (`@media print`) y disparadores inmediatos. Permite la exportación de recetas con calidad vectorial óptima, con sellos/firmas clínicas y controles flotantes interactivos.
+* **Sincronización en el Perfil del Expediente:** Inserción de una pestaña premium de "Tratamientos" en el expediente clínico del animal (`modules/mascotas/show.blade.php`), permitiendo realizar altas preseleccionadas y visualizaciones inmediatas de medicamentos sin salir del historial.
+* **Alertas Visuales de Confirmación Anti-Errores:** Todos los botones de eliminación de tratamientos muestran confirmaciones dinámicas detalladas con el nombre de la mascota, el fármaco y la frecuencia, previniendo borrados involuntarios de recetas.
+
 ---
 
 ## 🔍 Plan de Búsqueda con Laravel Scout
