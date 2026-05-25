@@ -127,17 +127,26 @@
                     <hr>
 
                     <div class="row mt-2">
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold text-muted text-uppercase small">Diagnóstico</label>
-                            <div class="border rounded p-3 bg-light text-dark" style="min-height:80px;">
-                                {{ $consulta->diagnostico ?? 'Sin diagnóstico registrado.' }}
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="font-weight-bold text-muted text-uppercase small">Tratamiento</label>
-                            <div class="border rounded p-3 bg-light text-success font-weight-bold" style="min-height:80px;">
-                                {{ $consulta->tratamiento ?? 'Sin tratamiento registrado.' }}
-                            </div>
+                        <div id="sec-diagnostico" class="col-md-12 mb-3">
+                            <label class="font-weight-bold text-muted text-uppercase small"><i class="fas fa-file-medical-alt text-primary mr-1"></i> Diagnóstico</label>
+                            @if(!empty($consulta->diagnostico) && trim($consulta->diagnostico) !== 'Sin diagnóstico registrado.')
+                                <div class="border rounded p-3 bg-light text-dark shadow-sm" style="min-height:90px; border-left: 4px solid #4e73df !important;">
+                                    {!! $consulta->diagnostico !!}
+                                </div>
+                            @else
+                                <div class="border rounded p-3 bg-light text-center shadow-sm" style="min-height:90px; border-left: 4px solid #e74a3b !important;">
+                                    <span class="text-danger font-weight-bold d-block mb-2">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> No se ha registrado un diagnóstico.
+                                    </span>
+                                    <p class="text-xs text-muted mb-2">
+                                        <strong>Ruta Laravel:</strong> <code>consultas.edit</code><br>
+                                        <strong>URL:</strong> <code>/consultas/{{ $consulta->id }}/edit</code>
+                                    </p>
+                                    <a href="{{ route('consultas.edit', $consulta->id) }}" class="btn btn-sm btn-danger font-weight-bold shadow-sm">
+                                        <i class="fas fa-plus mr-1"></i> Registrar Diagnóstico
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

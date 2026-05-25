@@ -19,9 +19,23 @@ Route::middleware("auth")->group(function () {
     Route::get('/home', [AuthController::class, 'home'])->name('home');
     Route::get('/expedientes', [AuthController::class, 'expedientes'])->name('expedientes');
     
-    // Rutas para Dueños y Mascotas
+    // Rutas para Dueños, Mascotas y Consultas (Diagnósticos)
     Route::resource('/duenos', DuenoController::class)->names('duenos');
     Route::resource('/mascotas', MascotaController::class)->names('mascotas');
+    Route::resource('/consultas', ConsultaController::class)->except(['show'])->names('consultas');
+
+    // Rutas para sub-recursos de Mascota (Alergias, Lesiones, Patologías, Alimentación)
+    Route::post('/mascotas/{mascota}/alergias', [MascotaController::class, 'storeAlergia'])->name('mascotas.alergias.store');
+    Route::delete('/alergias/{alergia}', [MascotaController::class, 'destroyAlergia'])->name('alergias.destroy');
+
+    Route::post('/mascotas/{mascota}/lesiones', [MascotaController::class, 'storeLesion'])->name('mascotas.lesiones.store');
+    Route::delete('/lesiones/{lesion}', [MascotaController::class, 'destroyLesion'])->name('lesiones.destroy');
+
+    Route::post('/mascotas/{mascota}/patologias', [MascotaController::class, 'storePatologia'])->name('mascotas.patologias.store');
+    Route::delete('/patologias/{patologia}', [MascotaController::class, 'destroyPatologia'])->name('patologias.destroy');
+
+    Route::post('/mascotas/{mascota}/alimentacion', [MascotaController::class, 'storeAlimentacion'])->name('mascotas.alimentacion.store');
+    Route::delete('/alimentacion/{alimentacion}', [MascotaController::class, 'destroyAlimentacion'])->name('alimentacion.destroy');
 
     // Ruta para detalle de consulta: /consultas/{consulta}/detalle?mascota={id}
     Route::get('/consultas/{consulta}/detalle', [ConsultaController::class, 'detalle'])->name('consultas.detalle');

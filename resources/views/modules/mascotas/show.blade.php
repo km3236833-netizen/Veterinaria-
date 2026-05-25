@@ -18,6 +18,29 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-left-success" role="alert">
+                <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-left-danger" role="alert">
+                <i class="fas fa-exclamation-triangle mr-2"></i><strong>¡Error!</strong> Por favor corrige los errores ingresados:
+                <ul class="mb-0 mt-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
         <div class="row">
             <!-- Left Side: Patient & Owner Profile Card -->
             <div class="col-xl-4 col-lg-5">
@@ -143,7 +166,7 @@
                             <div class="tab-pane fade show active" id="consultas" role="tabpanel" aria-labelledby="consultas-tab">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="font-weight-bold text-dark mb-0">Historial de Consultas Médicas</h5>
-                                    <button class="btn btn-primary btn-sm shadow-sm"><i class="fas fa-plus mr-1"></i> Nueva Consulta</button>
+                                    <a href="{{ route('consultas.create', ['mascota' => $item->id]) }}" class="btn btn-primary btn-sm shadow-sm"><i class="fas fa-plus mr-1"></i> Nueva Consulta</a>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
@@ -151,7 +174,6 @@
                                             <tr>
                                                 <th>Fecha</th>
                                                 <th>Diagnóstico</th>
-                                                <th>Tratamiento</th>
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -159,8 +181,7 @@
                                             @forelse($item->consultas as $consulta)
                                                 <tr>
                                                     <td>{{ \Carbon\Carbon::parse($consulta->fecha_consulta)->format('d/m/Y') }}</td>
-                                                    <td>{{ $consulta->diagnostico }}</td>
-                                                    <td><span class="text-success font-weight-bold">{{ $consulta->tratamiento }}</span></td>
+                                                    <td>{!! strip_tags($consulta->diagnostico) !!}</td>
                                                     <td class="text-center">
                                                         <a href="{{ route('consultas.detalle', ['consulta' => $consulta->id, 'mascota' => $item->id]) }}"
                                                            class="btn btn-sm btn-primary shadow-sm"
@@ -171,7 +192,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="4" class="text-center text-muted py-4">
+                                                    <td colspan="3" class="text-center text-muted py-4">
                                                         <i class="fas fa-notes-medical fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay consultas registradas para esta mascota.</p>
                                                     </td>
@@ -186,15 +207,18 @@
                             <div class="tab-pane fade" id="alergias" role="tabpanel" aria-labelledby="alergias-tab">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="font-weight-bold text-danger mb-0">Antecedentes de Alergias</h5>
-                                    <button class="btn btn-danger btn-sm shadow-sm"><i class="fas fa-plus mr-1"></i> Agregar Alergia</button>
+                                    <button class="btn btn-danger btn-sm shadow-sm" data-toggle="modal" data-target="#addAlergiaModal">
+                                        <i class="fas fa-plus mr-1"></i> Agregar Alergia
+                                    </button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped align-middle mb-0">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Sustancia Alergénica</th>
                                                 <th>Reacción Reportada</th>
                                                 <th>Fecha de Registro</th>
+                                                <th class="text-center" style="width: 100px;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -203,10 +227,20 @@
                                                     <td class="font-weight-bold text-danger">{{ $alergia->sustancia_alergena }}</td>
                                                     <td>{{ $alergia->reaccion }}</td>
                                                     <td>{{ $alergia->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">
+                                                        <form action="{{ route('alergias.destroy', $alergia->id) }}" method="POST" class="d-inline"
+                                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el registro de alergia:\n\n• Sustancia Alergénica: {{ $alergia->sustancia_alergena }}\n• Reacción Reportada: {{ $alergia->reaccion }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger px-2 shadow-sm" title="Eliminar Alergia">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center text-muted py-4">
+                                                    <td colspan="4" class="text-center text-muted py-4">
                                                         <i class="fas fa-allergies fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay alergias registradas para esta mascota.</p>
                                                     </td>
@@ -221,14 +255,17 @@
                             <div class="tab-pane fade" id="lesiones" role="tabpanel" aria-labelledby="lesiones-tab">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="font-weight-bold text-warning mb-0">Historial de Lesiones y Cirugías</h5>
-                                    <button class="btn btn-warning btn-sm shadow-sm text-dark font-weight-bold"><i class="fas fa-plus mr-1"></i> Registrar Lesión</button>
+                                    <button class="btn btn-warning btn-sm shadow-sm text-dark font-weight-bold" data-toggle="modal" data-target="#addLesionModal">
+                                        <i class="fas fa-plus mr-1"></i> Registrar Lesión
+                                    </button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped align-middle mb-0">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Lesión / Cirugía</th>
                                                 <th>Fecha de Registro</th>
+                                                <th class="text-center" style="width: 100px;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -236,10 +273,20 @@
                                                 <tr>
                                                     <td class="font-weight-bold text-dark">{{ $lesion->tipo_lesion }}</td>
                                                     <td>{{ $lesion->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">
+                                                        <form action="{{ route('lesiones.destroy', $lesion->id) }}" method="POST" class="d-inline"
+                                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el historial de lesión/cirugía:\n\n• Lesión o Cirugía: {{ $lesion->tipo_lesion }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger px-2 shadow-sm" title="Eliminar Lesión">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="2" class="text-center text-muted py-4">
+                                                    <td colspan="3" class="text-center text-muted py-4">
                                                         <i class="fas fa-user-md fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay lesiones o cirugías registradas.</p>
                                                     </td>
@@ -254,15 +301,18 @@
                             <div class="tab-pane fade" id="patologias" role="tabpanel" aria-labelledby="patologias-tab">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="font-weight-bold text-info mb-0">Enfermedades Crónicas / Patologías</h5>
-                                    <button class="btn btn-info btn-sm shadow-sm"><i class="fas fa-plus mr-1"></i> Agregar Patología</button>
+                                    <button class="btn btn-info btn-sm shadow-sm" data-toggle="modal" data-target="#addPatologiaModal">
+                                        <i class="fas fa-plus mr-1"></i> Agregar Patología
+                                    </button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped align-middle mb-0">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Enfermedad / Patología</th>
                                                 <th class="text-center">Crónica</th>
                                                 <th>Fecha de Diagnóstico</th>
+                                                <th class="text-center" style="width: 100px;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -277,10 +327,20 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $patologia->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">
+                                                        <form action="{{ route('patologias.destroy', $patologia->id) }}" method="POST" class="d-inline"
+                                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el antecedente patológico:\n\n• Enfermedad/Patología: {{ $patologia->enfermedad }}\n• ¿Crónica?: {{ $patologia->es_cronica ? "Sí" : "No" }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger px-2 shadow-sm" title="Eliminar Patología">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center text-muted py-4">
+                                                    <td colspan="4" class="text-center text-muted py-4">
                                                         <i class="fas fa-heartbeat fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay patologías previas registradas.</p>
                                                     </td>
@@ -295,27 +355,40 @@
                             <div class="tab-pane fade" id="alimentacion" role="tabpanel" aria-labelledby="alimentacion-tab">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="font-weight-bold text-success mb-0">Historial Alimenticio y Nutrición</h5>
-                                    <button class="btn btn-success btn-sm shadow-sm"><i class="fas fa-plus mr-1"></i> Registrar Dieta</button>
+                                    <button class="btn btn-success btn-sm shadow-sm" data-toggle="modal" data-target="#addDietaModal">
+                                        <i class="fas fa-plus mr-1"></i> Registrar Dieta
+                                    </button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped align-middle mb-0">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Descripción de Dieta / Alimento</th>
                                                 <th>Frecuencia Diaria</th>
                                                 <th>Fecha de Registro</th>
+                                                <th class="text-center" style="width: 100px;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($item->historialAlimentacion as $dieta)
                                                 <tr>
                                                     <td class="font-weight-bold text-dark">{{ $dieta->descripcion_dieta }}</td>
-                                                    <td><span class="badge badge-light border">{{ $dieta->frecuencia_diaria }} veces al día</span></td>
+                                                    <td><span class="badge badge-light border">{{ $dieta->frecuencia_diaria }}</span></td>
                                                     <td>{{ $dieta->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">
+                                                        <form action="{{ route('alimentacion.destroy', $dieta->id) }}" method="POST" class="d-inline"
+                                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el registro alimenticio:\n\n• Descripción de Dieta: {{ $dieta->descripcion_dieta }}\n• Frecuencia Diaria: {{ $dieta->frecuencia_diaria }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger px-2 shadow-sm" title="Eliminar Dieta">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="3" class="text-center text-muted py-4">
+                                                    <td colspan="4" class="text-center text-muted py-4">
                                                         <i class="fas fa-utensils fa-2x mb-2 text-gray-300"></i>
                                                         <p class="mb-0">No hay dietas o restricciones alimenticias registradas.</p>
                                                     </td>
@@ -328,6 +401,132 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALS SECTION: CREATE RECORD FOR TABS     -->
+    <!-- ========================================== -->
+
+    <!-- Modal: Agregar Alergia -->
+    <div class="modal fade" id="addAlergiaModal" tabindex="-1" role="dialog" aria-labelledby="addAlergiaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('mascotas.alergias.store', $item->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title font-weight-bold" id="addAlergiaModalLabel"><i class="fas fa-allergies mr-2"></i>Agregar Nueva Alergia</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Sustancia Alergénica <span class="text-danger">*</span></label>
+                            <input type="text" name="sustancia_alergena" class="form-control" placeholder="Ej. Penicilina, Pollo, Antipulgas..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Reacción Reportada <span class="text-danger">*</span></label>
+                            <input type="text" name="reaccion" class="form-control" placeholder="Ej. Shock, Dermatitis, Vómito..." required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger font-weight-bold shadow-sm">Registrar Alergia</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Registrar Lesión -->
+    <div class="modal fade" id="addLesionModal" tabindex="-1" role="dialog" aria-labelledby="addLesionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('mascotas.lesiones.store', $item->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header bg-warning text-dark">
+                        <h5 class="modal-title font-weight-bold" id="addLesionModalLabel"><i class="fas fa-user-md mr-2"></i>Registrar Lesión / Cirugía</h5>
+                        <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Descripción de la Lesión o Cirugía <span class="text-danger">*</span></label>
+                            <input type="text" name="tipo_lesion" class="form-control" placeholder="Ej. Cirugía de ligamento cruzado, Fractura..." required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning text-dark font-weight-bold shadow-sm">Registrar Lesión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Agregar Patología -->
+    <div class="modal fade" id="addPatologiaModal" tabindex="-1" role="dialog" aria-labelledby="addPatologiaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('mascotas.patologias.store', $item->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title font-weight-bold" id="addPatologiaModalLabel"><i class="fas fa-heartbeat mr-2"></i>Agregar Nueva Patología</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Enfermedad / Patología <span class="text-danger">*</span></label>
+                            <input type="text" name="enfermedad" class="form-control" placeholder="Ej. Insuficiencia renal, Diabetes..." required>
+                        </div>
+                        <div class="form-group mb-0">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="es_cronica" value="1" class="custom-control-input" id="es_cronica">
+                                <label class="custom-control-label font-weight-bold text-dark" for="es_cronica">¿Es una enfermedad crónica?</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-info font-weight-bold shadow-sm">Registrar Patología</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Registrar Dieta -->
+    <div class="modal fade" id="addDietaModal" tabindex="-1" role="dialog" aria-labelledby="addDietaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('mascotas.alimentacion.store', $item->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title font-weight-bold" id="addDietaModalLabel"><i class="fas fa-utensils mr-2"></i>Registrar Nueva Dieta</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Descripción de Dieta / Alimento <span class="text-danger">*</span></label>
+                            <input type="text" name="descripcion_dieta" class="form-control" placeholder="Ej. Croquetas Royal Canin Urinary..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Frecuencia Diaria <span class="text-danger">*</span></label>
+                            <input type="text" name="frecuencia_diaria" class="form-control" placeholder="Ej. 2 veces al día, Libre acceso..." required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success font-weight-bold shadow-sm">Registrar Dieta</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -138,4 +138,108 @@ class MascotaController extends Controller
         return redirect()->route('mascotas.index')
             ->with('success', 'Mascota eliminada correctamente.');
     }
+
+    // --- SUB-RESOURCES ACTIONS ---
+
+    // Alergias
+    public function storeAlergia(Request $request, $mascotaId)
+    {
+        $request->validate([
+            'sustancia_alergena' => 'required|string|max:255',
+            'reaccion' => 'required|string|max:255',
+        ]);
+
+        \App\Models\AntecedenteAlergia::create([
+            'mascota_id' => $mascotaId,
+            'sustancia_alergena' => $request->sustancia_alergena,
+            'reaccion' => $request->reaccion,
+        ]);
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se guardó la nueva información.');
+    }
+
+    public function destroyAlergia($id)
+    {
+        $alergia = \App\Models\AntecedenteAlergia::findOrFail($id);
+        $mascotaId = $alergia->mascota_id;
+        $alergia->delete();
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se eliminó la información con éxito.');
+    }
+
+    // Lesiones
+    public function storeLesion(Request $request, $mascotaId)
+    {
+        $request->validate([
+            'tipo_lesion' => 'required|string|max:255',
+        ]);
+
+        \App\Models\AntecedenteLesion::create([
+            'mascota_id' => $mascotaId,
+            'tipo_lesion' => $request->tipo_lesion,
+        ]);
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se guardó la nueva información.');
+    }
+
+    public function destroyLesion($id)
+    {
+        $lesion = \App\Models\AntecedenteLesion::findOrFail($id);
+        $mascotaId = $lesion->mascota_id;
+        $lesion->delete();
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se eliminó la información con éxito.');
+    }
+
+    // Patologías
+    public function storePatologia(Request $request, $mascotaId)
+    {
+        $request->validate([
+            'enfermedad' => 'required|string|max:255',
+            'es_cronica' => 'sometimes|boolean',
+        ]);
+
+        \App\Models\AntecedentePatologico::create([
+            'mascota_id' => $mascotaId,
+            'enfermedad' => $request->enfermedad,
+            'es_cronica' => $request->has('es_cronica') ? (bool)$request->es_cronica : false,
+        ]);
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se guardó la nueva información.');
+    }
+
+    public function destroyPatologia($id)
+    {
+        $patologia = \App\Models\AntecedentePatologico::findOrFail($id);
+        $mascotaId = $patologia->mascota_id;
+        $patologia->delete();
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se eliminó la información con éxito.');
+    }
+
+    // Alimentación / Dieta
+    public function storeAlimentacion(Request $request, $mascotaId)
+    {
+        $request->validate([
+            'descripcion_dieta' => 'required|string|max:255',
+            'frecuencia_diaria' => 'required|string|max:255',
+        ]);
+
+        \App\Models\HistorialAlimentacion::create([
+            'mascota_id' => $mascotaId,
+            'descripcion_dieta' => $request->descripcion_dieta,
+            'frecuencia_diaria' => $request->frecuencia_diaria,
+        ]);
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se guardó la nueva información.');
+    }
+
+    public function destroyAlimentacion($id)
+    {
+        $alimentacion = \App\Models\HistorialAlimentacion::findOrFail($id);
+        $mascotaId = $alimentacion->mascota_id;
+        $alimentacion->delete();
+
+        return redirect()->route('mascotas.show', $mascotaId)->with('success', 'Se eliminó la información con éxito.');
+    }
 }
