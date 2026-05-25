@@ -103,10 +103,9 @@
 
                             <hr class="my-4">
 
-                            <!-- Diagnóstico -->
                             <div class="form-group">
                                 <label for="diagnostico" class="font-weight-bold text-dark"><i class="fas fa-notes-medical text-primary mr-1"></i> Diagnóstico Médico</label>
-                                <textarea class="form-control" name="diagnostico" id="diagnostico" rows="4" placeholder="Describe detalladamente el diagnóstico clínico del paciente..." required>{{ old('diagnostico') }}</textarea>
+                                <textarea class="form-control" name="diagnostico" id="diagnostico" rows="4" placeholder="Describe detalladamente el diagnóstico clínico del paciente...">{{ old('diagnostico') }}</textarea>
                                 @error('diagnostico')
                                     <small class="text-danger font-weight-bold">{{ $message }}</small>
                                 @enderror

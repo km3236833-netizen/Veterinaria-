@@ -66,12 +66,11 @@
                             <input type="hidden" name="peso" value="{{ $item->peso }}">
                             <input type="hidden" name="talla" value="{{ $item->talla }}">
                             
-                            <!-- Diagnóstico field (Visible) -->
                             <div class="form-group mb-4">
                                 <label for="diagnostico" class="font-weight-bold text-dark mb-2">
                                     <i class="fas fa-notes-medical text-primary mr-1"></i> Describe el Diagnóstico de la Consulta
                                 </label>
-                                <textarea class="form-control" name="diagnostico" id="diagnostico" rows="6" style="border-radius: 8px; resize: vertical;" placeholder="Escribe aquí de manera detallada el diagnóstico clínico del paciente..." required>{{ old('diagnostico', $item->diagnostico) }}</textarea>
+                                <textarea class="form-control" name="diagnostico" id="diagnostico" rows="6" style="border-radius: 8px; resize: vertical;" placeholder="Escribe aquí de manera detallada el diagnóstico clínico del paciente...">{{ old('diagnostico', $item->diagnostico) }}</textarea>
                                 @error('diagnostico')
                                     <small class="text-danger font-weight-bold mt-1 d-block">{{ $message }}</small>
                                 @enderror
