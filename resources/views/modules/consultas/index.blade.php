@@ -83,7 +83,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('consultas.destroy', $item->id) }}" method="POST" class="d-inline ml-1" 
-                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el diagnóstico médico:\n\n• Paciente: {{ addslashes($item->mascota->nombre ?? \'N/A\') }}\n• Fecha: {{ \Carbon\Carbon::parse($item->fecha_consulta)->format(\'d/m/Y H:i\') }}\n• Diagnóstico: {{ addslashes(Str::limit(strip_tags($item->diagnostico), 60)) }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente el diagnóstico médico:\n\n• Paciente: {{ addslashes($item->mascota->nombre ?? 'N/A') }}\n• Fecha: {{ \Carbon\Carbon::parse($item->fecha_consulta)->format('d/m/Y H:i') }}\n• Diagnóstico: {{ addslashes(Str::limit(strip_tags($item->diagnostico), 60)) }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger shadow-sm px-2" title="Eliminar Diagnóstico">

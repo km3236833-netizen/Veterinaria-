@@ -79,7 +79,7 @@
                                         <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-sm btn-info btn-circle"><i class="fas fa-eye"></i></a>
                                         <a href="{{ route('mascotas.edit', $mascota->id) }}" class="btn btn-sm btn-warning btn-circle"><i class="fas fa-edit"></i></a>
                                         <form action="{{ route('mascotas.destroy', $mascota->id) }}" method="POST" class="d-inline" 
-                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente a la mascota:\n\n• Nombre: {{ addslashes($mascota->nombre) }}\n• Especie: {{ addslashes($mascota->especie) }}\n• Dueño: {{ addslashes($mascota->dueno->nombre_completo ?? \'Sin Dueño\') }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
+                                              onsubmit="return confirm('⚠️ ¡ATENCIÓN! Estás a punto de eliminar permanentemente a la mascota:\n\n• Nombre: {{ addslashes($mascota->nombre) }}\n• Especie: {{ addslashes($mascota->especie) }}\n• Dueño: {{ addslashes($mascota->dueno->nombre_completo ?? 'Sin Dueño') }}\n\n¿Estás completamente seguro de continuar con la eliminación?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger btn-circle"><i class="fas fa-trash"></i></button>
