@@ -10,9 +10,17 @@
         <h1 class="h3 mb-0 text-gray-800 font-weight-bold">
             <i class="fas fa-stethoscope text-primary mr-2"></i>Detalle de Consulta
         </h1>
-        <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm mr-1"></i> Volver al Expediente
-        </a>
+        <div class="d-flex">
+            <a href="{{ route('consultas.pdf', $consulta->id) }}" target="_blank" class="btn btn-danger btn-icon-split shadow mr-2">
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-pdf"></i>
+                </span>
+                <span class="text font-weight-bold">Generar Reporte (PDF)</span>
+            </a>
+            <a href="{{ route('mascotas.show', $mascota->id) }}" class="btn btn-secondary shadow-sm d-flex align-items-center">
+                <i class="fas fa-arrow-left fa-sm mr-1"></i> Volver al Expediente
+            </a>
+        </div>
     </div>
 
     <div class="row">

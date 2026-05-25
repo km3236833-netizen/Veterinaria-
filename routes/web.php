@@ -40,6 +40,7 @@ Route::middleware("auth")->group(function () {
 
     // Ruta para detalle de consulta: /consultas/{consulta}/detalle?mascota={id}
     Route::get('/consultas/{consulta}/detalle', [ConsultaController::class, 'detalle'])->name('consultas.detalle');
+    Route::get('/consultas/{consulta}/pdf', [ConsultaController::class, 'pdf'])->name('consultas.pdf');
 
     // Rutas para Tratamientos (Independientes)
     Route::get('/tratamientos/{tratamiento}/pdf', [TratamientoController::class, 'pdf'])->name('tratamientos.pdf');

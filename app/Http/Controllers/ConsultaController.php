@@ -141,4 +141,14 @@ class ConsultaController extends Controller
         return redirect()->route('consultas.index')
             ->with('success', 'Diagnóstico eliminado correctamente.');
     }
+
+    /**
+     * Genera el informe de consulta médica en formato imprimible PDF.
+     */
+    public function pdf($id)
+    {
+        $consulta = Consulta::with(['mascota.dueno', 'veterinario'])->findOrFail($id);
+        
+        return view('modules.consultas.pdf', compact('consulta'));
+    }
 }
