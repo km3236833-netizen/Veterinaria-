@@ -49,6 +49,17 @@ Este es un sistema de gestión para una veterinaria desarrollado con Laravel 12,
   * 4 propietarios y 4 mascotas con edades, especies y tipos de sangre variados.
   * Historiales de consulta médica detallados con peso, talla, diagnósticos y tratamientos clínicos vinculados.
 
+### 6. Desacoplamiento Clínico, CKEditor 5 y CRUD Completo de Diagnósticos y Antecedentes
+* **Desacoplamiento de Tratamiento:** Por requisitos de especialidad clínica, se removió el campo `tratamiento` de la experiencia de usuario clínica en todas las vistas de consultas, historial y edición, gestionándose internamente de manera segura con un valor por defecto ("Sin tratamiento") sin alterar la base de datos heredada.
+* **Integración de CKEditor 5:** Se incorporó el editor enriquecido CKEditor 5 de forma nativa a los formularios de creación y edición de diagnósticos, adaptándolo perfectamente a la estética SB Admin 2.
+* **Flujos CRUD Completos de Antecedentes:** Se crearon formularios modales dinámicos e independientes y sus correspondientes rutas y controladores RESTful para añadir y eliminar antecedentes directamente desde el perfil del paciente:
+  * **Alergias:** Registro y borrado con detalles de sustancia y reacción.
+  * **Lesiones:** Registro de lesiones o cirugías del historial clínico.
+  * **Patologías:** Diagnóstico de patologías o enfermedades indicando cronicidad.
+  * **Alimentación/Dieta:** Alta y baja de pautas dietéticas y frecuencia de alimentación.
+* **Confirmación Visual de Eliminación Detallada (Anti-Errores):** Se implementaron cuadros de diálogo interactivos avanzados en el cliente (`onsubmit`) para evitar pérdidas accidentales. Antes de borrar una consulta, mascota o antecedente, el sistema muestra una ventana emergente detallando explícitamente el nombre, fecha y contenido específico del registro clínico que está a punto de ser eliminado.
+* **Mensajería Reaseguradora:** Inserción de un sistema de alertas flash altamente estético y en armonía con Bootstrap 4, indicando el éxito de la operación mediante mensajes unificados: `"Se guardó la nueva información."` o `"Se eliminó la información con éxito."`.
+
 ---
 
 ## 🔍 Plan de Búsqueda con Laravel Scout
