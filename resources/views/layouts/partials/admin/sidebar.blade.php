@@ -27,41 +27,11 @@
         Gestión
     </div>
 
-    <!-- Nav Item - Menú -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.menu.index') }}">
-            <i class="fas fa-fw fa-th-list"></i>
-            <span>Menú de Opciones</span></a>
-    </li>
-
     <!-- Nav Item - Usuarios -->
     <li class="nav-item {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.usuarios.index') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Usuarios</span></a>
-    </li>
-
-    <!-- Nav Item - Diagnósticos -->
-    <li class="nav-item {{ request()->routeIs('consultas.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('consultas.index') }}">
-            <i class="fas fa-fw fa-file-medical-alt"></i>
-            <span>Diagnósticos</span>
-        </a>
-    </li>
-
-    <!-- Nav Item - Tratamientos -->
-    <li class="nav-item {{ request()->routeIs('tratamientos.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('tratamientos.index') }}">
-            <i class="fas fa-fw fa-capsules"></i>
-            <span>Tratamientos</span>
-        </a>
-    </li>
-
-    <!-- Nav Item - Reportes -->
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-chart-line"></i>
-            <span>Reportes</span></a>
     </li>
 
     <!-- Divider -->
