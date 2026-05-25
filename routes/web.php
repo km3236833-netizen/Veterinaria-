@@ -46,8 +46,19 @@ Route::middleware("auth")->group(function () {
     Route::get('/tratamientos/{tratamiento}/pdf', [TratamientoController::class, 'pdf'])->name('tratamientos.pdf');
     Route::resource('/tratamientos', TratamientoController::class)->names('tratamientos');
 
-    Route::get('/admin/home', [AuthController::class, 'adminHome'])->name('admin.home');
-    Route::get('/admin/menu', [MenuController::class, 'index'])->name('admin.menu.index');
-    Route::resource('/admin/usuarios', UserController::class)->names('admin.usuarios');
+    // Rutas protegidas solo para Administradores
+    Route::group(['middleware' => [
+        function ($request, $next) {
+            if (auth()->user()->rol !== 'administrador') {
+                return redirect()->route('home')->with('error', 'No tienes permisos de administrador para acceder a esta sección.');
+            }
+            return $next($request);
+        }
+    ]], function () {
+        Route::get('/admin/home', [AuthController::class, 'adminHome'])->name('admin.home');
+        Route::get('/admin/menu', [MenuController::class, 'index'])->name('admin.menu.index');
+        Route::resource('/admin/usuarios', UserController::class)->names('admin.usuarios');
+    });
+
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -66,24 +66,25 @@
         </a>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">Administración</div>
-
-    <!-- Nav Item - Usuarios (solo admin) -->
+    <!-- Sección de Administración (solo visible para administrador) -->
     @if(auth()->user()->rol === 'administrador')
-    <li class="nav-item {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.usuarios.index') }}">
-            <i class="fas fa-fw fa-user-cog"></i>
-            <span>Usuarios</span>
-        </a>
-    </li>
-    @endif
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
+        <!-- Heading -->
+        <div class="sidebar-heading">Administración</div>
+
+        <!-- Nav Item - Usuarios -->
+        <li class="nav-item {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.usuarios.index') }}">
+                <i class="fas fa-fw fa-user-cog"></i>
+                <span>Usuarios</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+    @endif
 
     <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
